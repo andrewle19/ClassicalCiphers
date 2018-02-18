@@ -1,3 +1,7 @@
+// Author: Andrew Le
+// email: andrewle19@csu.fullerton.edu
+// Practice with Classical Ciphers
+
 #include <iostream>
 #include <string>
 #include "CipherInterface.h"
@@ -49,6 +53,86 @@ int main(int argc, char** argv)
 	
     // playfair cipher selection
     if(string(argv[1]) == "PLF"){
+        
+        
+        string plain = "hello world";
+        // remove the white space
+        plain = removeSpace(plain);
+        
+        bool found; // to check if the alphabetical character is in set
+        int setcount = 0;
+        int setsize = 25;
+
+        char playfairMatrix[5][5]; // matrix of he playfair cipher
+        char playfairset[setsize]; // set that holds unique characters
+        
+        
+        // loop through the plain text and insert into set
+        for(int i = 0; i < plain.length(); i++) {
+            
+            found = false; // set default found case to false;
+            
+            // loop throught the set to see if the alphabetical character is in the set already
+            for(int j = 0; j < setsize; j++) {
+                
+                // since j and i are the same set found as true if it is found in the set
+                if(plain[i] == 'j' || plain[i] == 'i'){
+                    if(playfairset[j] == 'i' || playfairset[j] == 'j'){
+                        found = true;
+                    }
+                }
+                
+                //  if plain character is found in the set. set found as true
+                else if (playfairset[j] == plain[i]) {
+                    found = true;
+                }
+                
+            }
+            
+            // if alphabetical is not found add the plain text alpha to set
+            if(!found){
+                playfairset[setcount] = plain[i];
+                setcount++; // increment set count
+            }
+          }
+        
+        // fill in the rest of the alphabetical characters for matrix
+        char alpha = 'a';
+        while(setcount != setsize){
+            found = false;
+            // loop throught the set to check if that alpha is being used already
+            for(int i = 0; i < setcount; i++) {
+                
+                // since i and j are the same if either are found set it as true
+                if(alpha == 'i' || alpha == 'j'){
+                    if(playfairset[i] == 'i' || playfairset[i] == 'j'){
+                        found = true;
+                    }
+                }
+                
+                //  if plain character is found in the set. set found as true
+                if(playfairset[i] == alpha){
+                    found = true;
+                }
+            }
+            
+            // if alphabetical is not found add the plain text alpha to set
+            if(!found){
+                playfairset[setcount] = alpha;
+                setcount++; // increment set account
+            }
+            
+            alpha++; // increment the alpha after we check the whole matrix for it
+        }
+        
+        
+        
+        for(int i = 0; i < setcount; i++){
+            cout << playfairset[i] << ' ';
+        }
+        cout << '\n';
+        
+        
         
     }
     // row transposition selection
