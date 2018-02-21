@@ -7,6 +7,7 @@
 #include "CipherInterface.h"
 #include <fstream>
 #include <locale>
+#include "Ceasar.h"
 using namespace std;
 
 // Struct to store the matrix location of the plain text
@@ -326,32 +327,14 @@ int main(int argc, char** argv)
     }
     // ceasar selection
     else if(string(argv[1]) == "CES"){
-       
-        string plain = "Hello World";
-        string cipher;
-        string decrypt;
+        string plaintext = "Hello World";
+        plaintext = removeSpace(plaintext);
         int key = 3;
-        
-        plain = removeSpace(plain);
-        cout << plain << endl;
-        // traverse text
-        for (int i=0;i< plain.length();i++){
-            // Encrypt Uppercase letters
-            if (isupper(plain[i])) { cipher += char(int(plain[i]+key-'A')%26 +'A'); }
-            // Encrypt Lowercase letters
-            else{ cipher += char(int(plain[i]+key-'a')%26+'a'); }
-        }
-        cout << cipher << endl;
-        
-        // decrypt cipher text
-        for (int i=0;i< plain.length();i++){
-            //decrypt upper case
-            if (isupper(plain[i])) { decrypt += char(int(cipher[i]-key-'A')%26 +'A'); }
-            // decrypt Lowercase letters
-            else{ decrypt += char(int(cipher[i]-key-'a')%26+'a'); }
-        }
-        cout << decrypt << endl;
-    
+        cipher = new Ceasar();
+        static_cast<Ceasar*>(cipher)->setKey(key);
+        string ciphertext = static_cast<Ceasar*>(cipher)->encrypt(plaintext);
+        cout << ciphertext << endl;
+        cout << static_cast<Ceasar*>(cipher)->decrypt(ciphertext) << endl;
     }
     else {
         
