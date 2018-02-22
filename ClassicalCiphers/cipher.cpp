@@ -7,6 +7,7 @@
 #include "CipherInterface.h"
 #include <fstream>
 #include <locale>
+#include <algorithm>
 #include "Ceasar.h"
 #include "PlayFair.h"
 using namespace std;
@@ -58,17 +59,20 @@ int main(int argc, char** argv)
 	
     // playfair cipher selection
     if(string(argv[1]) == "PLF"){
-        string key = "monarchy";
-        string plaintext = "balloon";
+        string key = "royal new zealand navy";
+        string plaintext;
         // remove the white space
         key = removeSpace(key);
         
         cipher = new PlayFair();
         static_cast<PlayFair*>(cipher)->setKey(key);
-        string ciphertext = static_cast<PlayFair*>(cipher)->encrypt(plaintext);
-        cout << ciphertext << endl;
-        cout << static_cast<PlayFair*>(cipher)->decrypt(ciphertext) << endl;
+        string ciphertext =" KXJEY UREBE ZWEHE WRYTU HEYFS KREHE GOYFI WTTTU OLKSY CAJPO BOTEI ZONTX BYBNT GONEY CUZWR GDSON SXBOU YWRHE BAAHY USEDQ";
+        ciphertext = removeSpace(ciphertext);
+        std::transform(ciphertext.begin(),ciphertext.end(),ciphertext.begin(), ::tolower);
         
+        cout << ciphertext << endl;
+        cout << '\n';
+        cout << static_cast<PlayFair*>(cipher)->decrypt(ciphertext) << endl;
     }
     // row transposition selection
     else if(string(argv[1]) == "RTS"){

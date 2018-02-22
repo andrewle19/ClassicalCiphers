@@ -8,10 +8,11 @@
 
 
 #include "PlayFair.h"
-
+#include <iostream>
 PlayFair::PlayFair(){
     setcount = 0;
     setsize = 25;
+    memset(playfairset, 0, 25);
 }
 
 bool PlayFair::setKey(string pkey){
@@ -94,6 +95,13 @@ void PlayFair::initMatrix(){
             setindex++;
         }
     }
+    for(int i = 0; i < 5; i++){
+        for(int j = 0; j < 5; j++){
+            cout << playfairMatrix[i][j] << ' ';
+        }
+        cout << endl;
+    }
+    cout << endl;
 }
 
 // prepares the plain text for playfair cipher
@@ -177,22 +185,39 @@ string PlayFair::decryptHelper(char firstletter, char secondletter){
     // Finds the location of the two letters
     for(int i = 0; i < 5; i++){
         for(int j = 0; j < 5; j++){
+            
+            // check if the first or second letter is i or j and find location
+            if(firstletter == 'j' || firstletter == 'i'){
+                if(playfairMatrix[i][j] == 'i' || playfairMatrix[i][j] == 'j'){
+                    one.row = i;
+                    one.col = j;
+                }
+            }
+            else if(secondletter == 'j' || secondletter == 'i'){
+                if(playfairMatrix[i][j] == 'i' || playfairMatrix[i][j] == 'j'){
+                    two.row = i;
+                    two.col = j;
+                }
+            }
+            // check for location in playfair matrix
             if(firstletter == playfairMatrix[i][j]){
-                one.row = i;
-                one.col = j;
-            } else if(secondletter == playfairMatrix[i][j]){
-                two.row = i;
-                two.col = j;
+                    one.row = i;
+                    one.col = j;
+                } else if(secondletter == playfairMatrix[i][j]){
+                    two.row = i;
+                    two.col = j;
+
+                }
             }
         }
-    }
     
     // Decrypt THE Cipher TEXT TO plain TEXT
-    
+
     // checks if each are in the same column moves up a row
     if(one.col == two.col){
         plain += playfairMatrix[one.row-1%5][one.col];
         plain += playfairMatrix[two.row-1%5][two.col];
+        
     }
     // checks if in same row moves right one column
     else if(one.row == two.row){
@@ -216,6 +241,7 @@ string PlayFair::decrypt(const string &ciphertext){
     string plain;
     for(int i = 0; i < ciphertext.length(); i+=2){
         plain += decryptHelper(ciphertext[i], ciphertext[i+1]);
+        
     }
     return plain;
 }
