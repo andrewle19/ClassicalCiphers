@@ -25,8 +25,7 @@ class CipherInterface
 		 * @param key - the key to use
 		 * @return - True if the key is valid and False otherwise
 		 */
-		virtual bool setKey(const unsigned char* key){ return false;  }
-
+        virtual bool setKey(const unsigned char* key){ return false; }
 		/**	
 		 * Encrypts a plaintext string
 		 * @param plaintext - the plaintext string

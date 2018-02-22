@@ -8,6 +8,7 @@
 
 /* Begin PBXBuildFile section */
 		49105360203D9290002D021C /* Ceasar.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 4910535E203D9290002D021C /* Ceasar.cpp */; };
+		49141C03203E505A0063FAD6 /* PlayFair.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 49141C01203E505A0063FAD6 /* PlayFair.cpp */; };
 		49FD48F220315B0C0098C10E /* cipher.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 49FD48EC20315B0B0098C10E /* cipher.cpp */; };
 /* End PBXBuildFile section */
 
@@ -26,6 +27,8 @@
 /* Begin PBXFileReference section */
 		4910535E203D9290002D021C /* Ceasar.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = Ceasar.cpp; sourceTree = "<group>"; };
 		4910535F203D9290002D021C /* Ceasar.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = Ceasar.h; sourceTree = "<group>"; };
+		49141C01203E505A0063FAD6 /* PlayFair.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = PlayFair.cpp; sourceTree = "<group>"; };
+		49141C02203E505A0063FAD6 /* PlayFair.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = PlayFair.h; sourceTree = "<group>"; };
 		49FD48DF20315AED0098C10E /* ClassicalCiphers */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = ClassicalCiphers; sourceTree = BUILT_PRODUCTS_DIR; };
 		49FD48E920315B0A0098C10E /* CipherInterface.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CipherInterface.h; sourceTree = "<group>"; };
 		49FD48EC20315B0B0098C10E /* cipher.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = cipher.cpp; sourceTree = "<group>"; };
@@ -62,9 +65,11 @@
 			isa = PBXGroup;
 			children = (
 				49FD48EC20315B0B0098C10E /* cipher.cpp */,
+				49FD48E920315B0A0098C10E /* CipherInterface.h */,
+				49141C01203E505A0063FAD6 /* PlayFair.cpp */,
+				49141C02203E505A0063FAD6 /* PlayFair.h */,
 				4910535E203D9290002D021C /* Ceasar.cpp */,
 				4910535F203D9290002D021C /* Ceasar.h */,
-				49FD48E920315B0A0098C10E /* CipherInterface.h */,
 			);
 			path = ClassicalCiphers;
 			sourceTree = "<group>";
@@ -127,6 +132,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				49105360203D9290002D021C /* Ceasar.cpp in Sources */,
+				49141C03203E505A0063FAD6 /* PlayFair.cpp in Sources */,
 				49FD48F220315B0C0098C10E /* cipher.cpp in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

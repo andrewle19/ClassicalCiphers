@@ -7,17 +7,17 @@
 //
 
 #include "Ceasar.h"
-
+#include <iostream>
 // default constructor
 Ceasar::Ceasar(){
-    int key = 0;
+   key = 0;
 }
 
 // sets the key to use
 // input: key- int key to use for shifts
 // output: false or true when set
 bool Ceasar::setKey(int ckey){
-    if(key > 0){
+    if(ckey > 0){
         key = ckey;
         return true;
     }
@@ -26,6 +26,10 @@ bool Ceasar::setKey(int ckey){
     }
 }
 
+
+// Encrypt plaintext into ciphertext
+// INPUT: plaintext - plaintext
+// OUTPUT: return the ciphertext
 string Ceasar::encrypt(const string &plaintext){
     string ciphertext;
     // traverse text
@@ -38,7 +42,8 @@ string Ceasar::encrypt(const string &plaintext){
     return ciphertext;
 }
 
-
+// Decrypt the ciphertext
+// string - ciphertext
 string Ceasar::decrypt(const string &ciphertext){
     string plaintext;
     for (int i=0;i< ciphertext.length();i++){
