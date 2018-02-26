@@ -62,6 +62,17 @@ void RowTransposition::initDecryptionMatrix(const string &ciphertext){
     
     // calculate the row needed for matrix
     row = round(double(ciphertext.length()/double(maxKey)));
+    
+    
+    rowTransMatrix = new char *[row]; // dynamically allocate the rows
+    
+    // dynamically allocate the columns
+    for(int i = 0; i < row; i++){
+        rowTransMatrix[i] = new char[maxKey];
+    }
+    
+    
+    
     int count = 0;
     // insert the cipher text into the matrix by cycling through it
     // insert column by column

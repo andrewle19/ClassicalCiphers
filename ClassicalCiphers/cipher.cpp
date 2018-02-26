@@ -33,23 +33,31 @@ string removeSpace(string plain){
 }
 
 
+// function changes string to lowercase
+string toLowercaseString(string plain){
+    string tolower;
+    
+    for(int i = 0; i < plain.length(); i++) {
+        if(plain[i] < 97) {
+            tolower += plain[i] + 32;
+        }
+        else {
+            tolower += plain[i];
+        }
+    }
+    return tolower;
+}
+
 
 int main(int argc, char** argv)
 {
-	/**
-	 * TODO: Replace the code below	with your code which can SWITCH
-	 * between DES and AES and encrypt files. DO NOT FORGET TO PAD
-	 * THE LAST BLOCK IF NECESSARY.
-	 *
-	 * NOTE: due to the incomplete skeleton, the code may crash or
-	 * misbehave.
-	 */
 	
   
 	
 	/* Create an instance of the DES cipher */	
 	CipherInterface* cipher = NULL; 
-		
+    ifstream infile;
+    ofstream outfile;
 //    /* Error checks */
 //    if(!cipher)
 //    {
@@ -58,33 +66,117 @@ int main(int argc, char** argv)
 //        exit(-1);
 //    }
 	
+    string key = string(argv[2]);
     // playfair cipher selection
     if(string(argv[1]) == "PLF"){
-        string key = "royal new zealand navy";
-        string plaintext;
         // remove the white space
         key = removeSpace(key);
-        
         cipher = new PlayFair();
-        static_cast<PlayFair*>(cipher)->setKey(key);
-        string ciphertext =" KXJEY UREBE ZWEHE WRYTU HEYFS KREHE GOYFI WTTTU OLKSY CAJPO BOTEI ZONTX BYBNT GONEY CUZWR GDSON SXBOU YWRHE BAAHY USEDQ";
-        ciphertext = removeSpace(ciphertext);
-        std::transform(ciphertext.begin(),ciphertext.end(),ciphertext.begin(), ::tolower);
+        if(!static_cast<PlayFair*>(cipher)->setKey(key)){
+            cout << "key was not valid" << endl;
+        };
         
-        cout << ciphertext << endl;
-        cout << '\n';
-        cout << static_cast<PlayFair*>(cipher)->decrypt(ciphertext) << endl;
+        if(string(argv[3]) == "ENC"){
+        
+            infile.open(argv[4]); // open user input file
+            if(!infile){
+                cout << "No Input File was found" << endl;
+                return 1;
+            }
+            
+            // take in the plain text
+            string plaintext;
+            infile >> plaintext;
+            plaintext = toLowercaseString(plaintext);
+            cout << plaintext << endl;
+            // encrypt ciphertext with playfair cipher
+            string ciphertext = static_cast<PlayFair*>(cipher)->encrypt(plaintext);
+            outfile.open(argv[5]);
+            outfile << ciphertext;
+            
+            // close files
+            outfile.close();
+            infile.close();
+
+        }
+        
+        else if(string(argv[3]) == "DEC") {
+           
+            infile.open(argv[4]);
+            
+            if(!infile){
+                cout << "Input file was not found" << endl;
+                return 1;
+            }
+            
+            string ciphertext;
+            infile >> ciphertext;
+            ciphertext = toLowercaseString(ciphertext);
+            
+            outfile.open(argv[4]);
+            // decrypt message and output it
+            string plaintext = static_cast<PlayFair*>(cipher)->decrypt(ciphertext);
+            outfile << plaintext;
+            infile.close();
+            outfile.close();
+        }
+        
     }
     // row transposition selection
     else if(string(argv[1]) == "RTS"){
-        string key = "3 4 2 1 5 6 7";
-        string plaintext = "attackpostponeduntiltwoamxyz";
         cipher = new RowTransposition();
-        static_cast<RowTransposition*>(cipher)->setKey(key);
-        string ciphertext = static_cast<RowTransposition*>(cipher)->encrypt(plaintext);
-        cout << ciphertext << endl;
+        if(!static_cast<RowTransposition*>(cipher)->setKey(key)){
+            cout << "Key was not valid" << endl;
+            
+            return 1;
+        };
         
-        cout << static_cast<RowTransposition*>(cipher)->decrypt(ciphertext) << endl;
+        if(string(argv[3]) == "ENC"){
+            infile.open(argv[4]);
+            if(!infile){
+                cout << "No Input File was found" << endl;
+                return 1;
+            }
+            
+            // take in the plain text
+            string plaintext;
+            infile >> plaintext;
+            plaintext = toLowercaseString(plaintext);
+            // encrypt ciphertext with playfair cipher
+            cout << "Encrypting... " << endl;
+            string ciphertext = static_cast<RowTransposition*>(cipher)->encrypt(plaintext);
+            cout << "Done" << endl;
+            outfile.open(argv[5]);
+            outfile << ciphertext;
+            
+            // close files
+            outfile.close();
+            infile.close();
+            
+        }
+        
+        else if(string(argv[3]) == "DEC") {
+            
+            infile.open(argv[4]);
+            
+            if(!infile){
+                cout << "Input file was not found" << endl;
+                return 1;
+            }
+            
+            string ciphertext;
+            infile >> ciphertext;
+            ciphertext = toLowercaseString(ciphertext);
+            
+            outfile.open(argv[5]);
+            // decrypt message and output it
+            cout << "Decrypting..." << endl;
+            string plaintext = static_cast<RowTransposition*>(cipher)->decrypt(ciphertext);
+            outfile << plaintext;
+            cout << "Done..." << endl;
+            infile.close();;
+            outfile.close();
+        }
         static_cast<RowTransposition*>(cipher)->freeMatrix();
         
     }
@@ -99,17 +191,63 @@ int main(int argc, char** argv)
     // ceasar selection
     else if(string(argv[1]) == "CES"){
         
-        string plaintext = "Hello World";
-        plaintext = removeSpace(plaintext);
-        int key = 3;
-        cipher = new Ceasar();
-        static_cast<Ceasar*>(cipher)->setKey(key);
-        string ciphertext = static_cast<Ceasar*>(cipher)->encrypt(plaintext);
-        cout << ciphertext << endl;
         
-        cout << static_cast<Ceasar*>(cipher)->decrypt(ciphertext) << endl;
+        cipher = new Ceasar();
+        static_cast<Ceasar*>(cipher)->setKey(stoi(key));
+        
+        if(!static_cast<Ceasar*>(cipher)->setKey(stoi(key))){
+            cout << "Key was not valid" << endl;
+            
+            return 1;
+        };
+        
+        if(string(argv[3]) == "ENC"){
+            infile.open(argv[4]);
+            if(!infile){
+                cout << "No Input File was found" << endl;
+                return 1;
+            }
+            
+            // take in the plain text
+            string plaintext;
+            infile >> plaintext;
+            plaintext = toLowercaseString(plaintext);
+            // encrypt ciphertext with playfair cipher
+            cout << "Encrypting... " << endl;
+            string ciphertext = static_cast<Ceasar*>(cipher)->encrypt(plaintext);
+            cout << "Done" << endl;
+            outfile.open(argv[5]);
+            outfile << ciphertext;
+            
+            // close files
+            outfile.close();
+            infile.close();
+            
+        }
+        
+        else if(string(argv[3]) == "DEC") {
+            
+            infile.open(argv[4]);
+            
+            if(!infile){
+                cout << "Input file was not found" << endl;
+                return 1;
+            }
+            
+            string ciphertext;
+            infile >> ciphertext;
+            ciphertext = toLowercaseString(ciphertext);
+            
+            outfile.open(argv[5]);
+            // decrypt message and output it
+            cout << "Decrypting..." << endl;
+            string plaintext = static_cast<Ceasar*>(cipher)->decrypt(ciphertext);
+            outfile << plaintext;
+            cout << "Done..." << endl;
+            infile.close();;
+            outfile.close();
+        }
     }
-    
     else {
         
     }
