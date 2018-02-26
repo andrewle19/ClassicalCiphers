@@ -10,6 +10,7 @@
 #include <algorithm>
 #include "Ceasar.h"
 #include "PlayFair.h"
+#include "RowTransposition.h"
 using namespace std;
 
 
@@ -76,7 +77,14 @@ int main(int argc, char** argv)
     }
     // row transposition selection
     else if(string(argv[1]) == "RTS"){
+        string key = "3 4 2 1 5 6 7";
+        string plaintext = "transpositionciphers";
+        cipher = new RowTransposition();
+        static_cast<RowTransposition*>(cipher)->setKey(key);
+        string ciphertext = static_cast<RowTransposition*>(cipher)->encrypt(plaintext);
+        cout << ciphertext << endl;
         
+        cout << static_cast<RowTransposition*>(cipher)->decrypt(ciphertext) << endl;;
     }
     // rail fence selection
     else if(string(argv[1]) == "RFC"){
@@ -96,6 +104,7 @@ int main(int argc, char** argv)
         static_cast<Ceasar*>(cipher)->setKey(key);
         string ciphertext = static_cast<Ceasar*>(cipher)->encrypt(plaintext);
         cout << ciphertext << endl;
+        
         cout << static_cast<Ceasar*>(cipher)->decrypt(ciphertext) << endl;
     }
     

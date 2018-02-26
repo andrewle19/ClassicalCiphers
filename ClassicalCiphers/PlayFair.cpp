@@ -241,7 +241,6 @@ string PlayFair::decrypt(const string &ciphertext){
     string plain;
     for(int i = 0; i < ciphertext.length(); i+=2){
         plain += decryptHelper(ciphertext[i], ciphertext[i+1]);
-        
     }
     return plain;
 }
