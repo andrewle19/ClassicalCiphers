@@ -78,13 +78,15 @@ int main(int argc, char** argv)
     // row transposition selection
     else if(string(argv[1]) == "RTS"){
         string key = "3 4 2 1 5 6 7";
-        string plaintext = "transpositionciphers";
+        string plaintext = "attackpostponeduntiltwoamxyz";
         cipher = new RowTransposition();
         static_cast<RowTransposition*>(cipher)->setKey(key);
         string ciphertext = static_cast<RowTransposition*>(cipher)->encrypt(plaintext);
         cout << ciphertext << endl;
         
-        cout << static_cast<RowTransposition*>(cipher)->decrypt(ciphertext) << endl;;
+        cout << static_cast<RowTransposition*>(cipher)->decrypt(ciphertext) << endl;
+        static_cast<RowTransposition*>(cipher)->freeMatrix();
+        
     }
     // rail fence selection
     else if(string(argv[1]) == "RFC"){

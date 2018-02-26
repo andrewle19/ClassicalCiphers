@@ -48,11 +48,15 @@ public:
      */
     string decrypt(const string &ciphertext);
     
-    
+    // initializes the Row Trans Matrix with plaintext
     void initMatrix(const string &plainText);
     
-    
+    // initializes the row trans matrix with ciphertext
     void initDecryptionMatrix(const string &ciphertext);
+    
+    // Free up memory used from matrix
+    void freeMatrix();
+    
     /* The protected members */
 protected:
     
