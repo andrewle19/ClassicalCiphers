@@ -18,26 +18,26 @@ RowTransposition::RowTransposition(){};
 // Inititializes the row trans matrix dynamically
 // plaintext- string plain text
 void RowTransposition::initMatrix(const string &plainText) {
-    
+
     // calculate how many rows the matrix needs
 
     row = round(double(plainText.length())/double(maxKey));
 
     rowTransMatrix = new char *[row]; // dynamically allocate the rows
-    
+
     // dynamically allocate the columns
     for(int i = 0; i < row; i++){
         rowTransMatrix[i] = new char[maxKey];
     }
-    
+
     // FILL matrix with xs
     for(int i = 0; i < row; i++){
         for(int j = 0; j < maxKey; j++){
             rowTransMatrix[i][j] = 'x';
-            
+
         }
     }
-    
+
     // insert plaintext into the matrix
     int count = 0;
     // cycle through the whole plaintext
@@ -52,27 +52,27 @@ void RowTransposition::initMatrix(const string &plainText) {
             }
         }
    }
-    
+
 }
 
 
 // initalizes the row Trans matrix with cipher text dyanamically
 // ciphertext-cipher text
 void RowTransposition::initDecryptionMatrix(const string &ciphertext){
-    
+
     // calculate the row needed for matrix
     row = round(double(ciphertext.length()/double(maxKey)));
-    
-    
+
+
     rowTransMatrix = new char *[row]; // dynamically allocate the rows
-    
+
     // dynamically allocate the columns
     for(int i = 0; i < row; i++){
         rowTransMatrix[i] = new char[maxKey];
     }
-    
-    
-    
+
+
+
     int count = 0;
     // insert the cipher text into the matrix by cycling through it
     // insert column by column
@@ -90,19 +90,25 @@ void RowTransposition::initDecryptionMatrix(const string &ciphertext){
 
 // set the key and finds the max key for the cipher
 bool RowTransposition::setKey(const string &rkey){
-   
+
     if(rkey.empty()){
         return false;
     }
-    
-    
+
+    if(rkey.length()){
+      cout << "Please use a valid key and include it in quotation marks" << endl;
+      cout << "EX: \"1 2 3 4 5 6\" " << endl;
+      return false;
+    }
+
+
     // put key into the key vertex
     for(int i = 0; i < rkey.length(); i++){
         if(rkey[i] != ' ') {
             key.push_back(rkey[i]-'0');
         }
     }
-    
+
     // AlSO find out the max key
     maxKey = key.at(0);
     for(int i = 0; i < key.size(); i++ ){
@@ -110,8 +116,8 @@ bool RowTransposition::setKey(const string &rkey){
             maxKey = key.at(i);
         }
     }
-    
-    
+
+
     return true;
 };
 
@@ -122,14 +128,14 @@ bool RowTransposition::setKey(const string &rkey){
 string RowTransposition::encrypt(const string &plaintext){
     initMatrix(plaintext); // inititalize the matrix
     string ciphertext;
-    
+
     // loops through the matrix by using the key to go column by column to create cipher text
     for(int j = 0; j < key.size(); j++){
         for(int i = 0; i < row; i++){
             ciphertext += rowTransMatrix[i][key.at(j)-1];
         }
     }
-   
+
     return ciphertext;
 };
 
@@ -139,7 +145,7 @@ string RowTransposition::encrypt(const string &plaintext){
 string RowTransposition::decrypt(const string &ciphertext){
     string plaintext;
     initDecryptionMatrix(ciphertext);
-    
+
     for(int i = 0; i < row; i++) {
         for(int j = 0; j < maxKey; j++){
             plaintext += rowTransMatrix[i][j];
@@ -155,4 +161,3 @@ void RowTransposition::freeMatrix() {
     }
     delete [] rowTransMatrix;
 };
-
