@@ -95,8 +95,8 @@ bool RowTransposition::setKey(const string &rkey){
         return false;
     }
 
-    if(rkey.length()){
-      cout << "Please use a valid key and include it in quotation marks" << endl;
+    if(rkey.length() == 1){
+      cout << "USAGE ERROR: Please use a valid key and include it in quotation marks" << endl;
       cout << "EX: \"1 2 3 4 5 6\" " << endl;
       return false;
     }

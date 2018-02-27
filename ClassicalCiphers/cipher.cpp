@@ -179,7 +179,7 @@ int main(int argc, char** argv)
             outfile.open(argv[5]);
             // decrypt message and output it
             cout << "Decrypting..." << endl;
-            string plaintext = static_cast<Railfence*>(cipher)->decrypt(ciphertext);
+            string plaintext = static_cast<RowTransposition*>(cipher)->decrypt(ciphertext);
             outfile << plaintext;
             cout << "Done..." << endl;
             infile.close();;
