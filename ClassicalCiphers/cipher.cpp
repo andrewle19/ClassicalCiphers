@@ -21,9 +21,9 @@ using namespace std;
 // Input: plain text
 // output: plain text without white space
 string removeSpace(string plain){
-    
+
     string noSpacePlain;
-    
+
     // traverse string and add any character that is not a space
     for(int i = 0; i < plain.length(); i++) {
         if(plain[i] != ' ') {
@@ -38,7 +38,7 @@ string removeSpace(string plain){
 // function changes string to lowercase
 string toLowercaseString(string plain){
     string tolower;
-    
+
     for(int i = 0; i < plain.length(); i++) {
         if(plain[i] < 97) {
             tolower += plain[i] + 32;
@@ -53,20 +53,20 @@ string toLowercaseString(string plain){
 
 int main(int argc, char** argv)
 {
-	
-  
+
+
     // check arguments if too little or too much
     if(argc != 6){
         cout << "Too little or too many arguments used" << endl;
         cout << "./cipher <CIPHER NAME> <KEY> <ENC/DEC> <INPUTFILE> <OUTPUT FILE>\n";
         return 1;
     }
-	
-	/* Create an instance of the DES cipher */	
-	CipherInterface* cipher = NULL; 
+
+	/* Create an instance of the DES cipher */
+	CipherInterface* cipher = NULL;
     ifstream infile;
     ofstream outfile;
-	
+
     // get key from arguments
     string key = string(argv[2]);
     // playfair cipher selection
@@ -74,20 +74,20 @@ int main(int argc, char** argv)
         // remove the white space
         key = removeSpace(key);
         cipher = new PlayFair();
-        
+
         // check if key is valid and set it
         if(!static_cast<PlayFair*>(cipher)->setKey(key)){
             cout << "key was not valid" << endl;
         };
-        
+
         if(string(argv[3]) == "ENC"){
-        
+
             infile.open(argv[4]); // open user input file
             if(!infile){
                 cout << "No Input File was found" << endl;
                 return 1;
             }
-            
+
             // take in the plain text
             string plaintext;
             infile >> plaintext;
@@ -98,26 +98,26 @@ int main(int argc, char** argv)
             cout << "Done" << endl;
             outfile.open(argv[5]);
             outfile << ciphertext;
-            
+
             // close files
             outfile.close();
             infile.close();
 
         }
-        
+
         else if(string(argv[3]) == "DEC") {
-           
+
             infile.open(argv[4]);
-            
+
             if(!infile){
                 cout << "Input file was not found" << endl;
                 return 1;
             }
-            
+
             string ciphertext;
             infile >> ciphertext;
             ciphertext = toLowercaseString(ciphertext);
-            
+
             outfile.open(argv[5]);
             // decrypt message and output it
             cout << "Decrypting..." << endl;
@@ -127,25 +127,25 @@ int main(int argc, char** argv)
             infile.close();
             outfile.close();
         }
-        
+
     }
     // row transposition selection
     else if(string(argv[1]) == "RTS"){
-        
+
         cipher = new RowTransposition();
         if(!static_cast<RowTransposition*>(cipher)->setKey(key)){
             cout << "Key was not valid" << endl;
-            
+
             return 1;
         };
-        
+
         if(string(argv[3]) == "ENC"){
             infile.open(argv[4]);
             if(!infile){
                 cout << "No Input File was found" << endl;
                 return 1;
             }
-            
+
             // take in the plain text
             string plaintext;
             infile >> plaintext;
@@ -156,26 +156,26 @@ int main(int argc, char** argv)
             cout << "Done" << endl;
             outfile.open(argv[5]);
             outfile << ciphertext;
-            
+
             // close files
             outfile.close();
             infile.close();
-            
+
         }
-        
+
         else if(string(argv[3]) == "DEC") {
-            
+
             infile.open(argv[4]);
-            
+
             if(!infile){
                 cout << "Input file was not found" << endl;
                 return 1;
             }
-            
+
             string ciphertext;
             infile >> ciphertext;
             ciphertext = toLowercaseString(ciphertext);
-            
+
             outfile.open(argv[5]);
             // decrypt message and output it
             cout << "Decrypting..." << endl;
@@ -186,7 +186,7 @@ int main(int argc, char** argv)
             outfile.close();
         }
         static_cast<RowTransposition*>(cipher)->freeMatrix();
-        
+
     }
     // rail fence selection
     else if(string(argv[1]) == "RFC"){
@@ -196,15 +196,15 @@ int main(int argc, char** argv)
         if(!static_cast<Railfence*>(cipher)->setKey(key)){
             cout << "key was not valid" << endl;
         };
-        
+
         if(string(argv[3]) == "ENC"){
-            
+
             infile.open(argv[4]); // open user input file
             if(!infile){
                 cout << "No Input File was found" << endl;
                 return 1;
             }
-            
+
             // take in the plain text
             string plaintext;
             infile >> plaintext;
@@ -215,24 +215,24 @@ int main(int argc, char** argv)
             cout << "Done..." << endl;
             outfile.open(argv[5]);
             outfile << ciphertext;
-            
+
             // close files
             outfile.close();
             infile.close();
-            
+
         }
-        
+
         else if(string(argv[3]) == "DEC") {
-            
+
             // open file
             infile.open(argv[4]);
-            
-            
+
+
             if(!infile){
                 cout << "Input file was not found" << endl;
                 return 1;
             }
-            
+
             // input cipher text
             string ciphertext;
             infile >> ciphertext;
@@ -244,23 +244,23 @@ int main(int argc, char** argv)
             string plaintext = static_cast<Railfence*>(cipher)->decrypt(ciphertext);
             cout << "Done" << endl;
             outfile << plaintext;
-          
+
             infile.close();
             outfile.close();
         }
 
     }
-    
+
     // Vigenere selection
     else if(string(argv[1]) == "VIG"){
         cipher = new Vigenere();
         // check if key is valid
         if(!static_cast<Vigenere*>(cipher)->setKey(key)){
             cout << "Key was not valid" << endl;
-            
+
             return 1;
         };
-        
+
         // encryption choice
         if(string(argv[3]) == "ENC"){
             infile.open(argv[4]);
@@ -268,7 +268,7 @@ int main(int argc, char** argv)
                 cout << "No Input File was found" << endl;
                 return 1;
             }
-            
+
             // take in the plain text
             string plaintext;
             infile >> plaintext;
@@ -279,26 +279,26 @@ int main(int argc, char** argv)
             cout << "Done" << endl;
             outfile.open(argv[5]);
             outfile << ciphertext;
-            
+
             // close files
             outfile.close();
             infile.close();
-            
+
         }
-        
+
         else if(string(argv[3]) == "DEC") {
-            
+
             infile.open(argv[4]);
-            
+
             if(!infile){
                 cout << "Input file was not found" << endl;
                 return 1;
             }
-            
+
             string ciphertext;
             infile >> ciphertext;
             ciphertext = toLowercaseString(ciphertext);
-            
+
             outfile.open(argv[5]);
             // decrypt message and output it
             cout << "Decrypting..." << endl;
@@ -311,24 +311,24 @@ int main(int argc, char** argv)
     }
     // ceasar selection
     else if(string(argv[1]) == "CES"){
-        
-        
+
+
         cipher = new Ceasar();
         static_cast<Ceasar*>(cipher)->setKey(stoi(key));
-        
+
         if(!static_cast<Ceasar*>(cipher)->setKey(stoi(key))){
             cout << "Key was not valid" << endl;
-            
+
             return 1;
         };
-        
+
         if(string(argv[3]) == "ENC"){
             infile.open(argv[4]);
             if(!infile){
                 cout << "No Input File was found" << endl;
                 return 1;
             }
-            
+
             // take in the plain text
             string plaintext;
             infile >> plaintext;
@@ -339,26 +339,26 @@ int main(int argc, char** argv)
             cout << "Done" << endl;
             outfile.open(argv[5]);
             outfile << ciphertext;
-            
+
             // close files
             outfile.close();
             infile.close();
-            
+
         }
-        
+
         else if(string(argv[3]) == "DEC") {
-            
+
             infile.open(argv[4]);
-            
+
             if(!infile){
                 cout << "Input file was not found" << endl;
                 return 1;
             }
-            
+
             string ciphertext;
             infile >> ciphertext;
             ciphertext = toLowercaseString(ciphertext);
-            
+
             outfile.open(argv[5]);
             // decrypt message and output it
             cout << "Decrypting..." << endl;
@@ -370,10 +370,14 @@ int main(int argc, char** argv)
         }
     }
     else {
-        cout << "Invalid Cipher name" << endl;
+        cout << "Invalid Cipher name: " << endl;
+        cout << "PLF: PlayFair" << endl;
+        cout << "RTS: Row Transposition" << endl;
+        cout << "VIG: Vigenere" << endl;
+        cout << "CES: Caesar" << endl;
         return 1;
     }
-    
-	
+
+
 	return 0;
 }
