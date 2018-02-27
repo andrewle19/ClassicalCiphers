@@ -15,6 +15,8 @@ PlayFair::PlayFair(){
     memset(playfairset, 0, 25);
 }
 
+// Sets the key with pkey
+// checks if the key is valid and if it is intitalizes the playfair matrix with key
 bool PlayFair::setKey(string pkey){
     if(pkey.empty()){
         return false;
@@ -25,6 +27,7 @@ bool PlayFair::setKey(string pkey){
     }
 }
 
+// initalize the playfair matrix based on key
 void PlayFair::initMatrix(){
     
     bool found = false;
@@ -140,6 +143,8 @@ string PlayFair:: preparePlainText(const string &plaintext){
 }
 
 
+// Takes in two characters finds location in the matrix and returns ciphertext
+// output: ciphertext based on the two characters
 string PlayFair:: encryptHelper(char firstletter, char secondletter){
     
     string ciphertext;
@@ -178,6 +183,7 @@ string PlayFair:: encryptHelper(char firstletter, char secondletter){
     return ciphertext;
 }
 
+// decrypts the two inputted character and returns plain text
 string PlayFair::decryptHelper(char firstletter, char secondletter){
     
     string plain;
@@ -235,7 +241,8 @@ string PlayFair::decryptHelper(char firstletter, char secondletter){
 
 
 
-
+// Decrypts the cipher using the playfair cipher
+// returns plain text
 string PlayFair::decrypt(const string &ciphertext){
     
     string plain;
@@ -246,7 +253,8 @@ string PlayFair::decrypt(const string &ciphertext){
 }
 
 
-
+// Encrypts using the playfair cipher
+// returns ciphertext
 string PlayFair::encrypt(const string &plaintext){
     
     string ciphertext;

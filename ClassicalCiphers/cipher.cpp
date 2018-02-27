@@ -11,6 +11,8 @@
 #include "Ceasar.h"
 #include "PlayFair.h"
 #include "RowTransposition.h"
+#include "Railfence.h"
+#include "Vigenere.h"
 using namespace std;
 
 
@@ -53,25 +55,27 @@ int main(int argc, char** argv)
 {
 	
   
+    // check arguments if too little or too much
+    if(argc != 6){
+        cout << "Too little or too many arguments used" << endl;
+        cout << "./cipher <CIPHER NAME> <KEY> <ENC/DEC> <INPUTFILE> <OUTPUT FILE>\n";
+        return 1;
+    }
 	
 	/* Create an instance of the DES cipher */	
 	CipherInterface* cipher = NULL; 
     ifstream infile;
     ofstream outfile;
-//    /* Error checks */
-//    if(!cipher)
-//    {
-//        fprintf(stderr, "ERROR [%s %s %d]: could not allocate memory\n",
-//        __FILE__, __FUNCTION__, __LINE__);
-//        exit(-1);
-//    }
 	
+    // get key from arguments
     string key = string(argv[2]);
     // playfair cipher selection
     if(string(argv[1]) == "PLF"){
         // remove the white space
         key = removeSpace(key);
         cipher = new PlayFair();
+        
+        // check if key is valid and set it
         if(!static_cast<PlayFair*>(cipher)->setKey(key)){
             cout << "key was not valid" << endl;
         };
@@ -88,9 +92,10 @@ int main(int argc, char** argv)
             string plaintext;
             infile >> plaintext;
             plaintext = toLowercaseString(plaintext);
-            cout << plaintext << endl;
             // encrypt ciphertext with playfair cipher
+            cout << "Playfair Encrypting..." << endl;
             string ciphertext = static_cast<PlayFair*>(cipher)->encrypt(plaintext);
+            cout << "Done" << endl;
             outfile.open(argv[5]);
             outfile << ciphertext;
             
@@ -113,9 +118,11 @@ int main(int argc, char** argv)
             infile >> ciphertext;
             ciphertext = toLowercaseString(ciphertext);
             
-            outfile.open(argv[4]);
+            outfile.open(argv[5]);
             // decrypt message and output it
+            cout << "Decrypting..." << endl;
             string plaintext = static_cast<PlayFair*>(cipher)->decrypt(ciphertext);
+            cout << "Done" << endl;
             outfile << plaintext;
             infile.close();
             outfile.close();
@@ -124,6 +131,7 @@ int main(int argc, char** argv)
     }
     // row transposition selection
     else if(string(argv[1]) == "RTS"){
+        
         cipher = new RowTransposition();
         if(!static_cast<RowTransposition*>(cipher)->setKey(key)){
             cout << "Key was not valid" << endl;
@@ -143,7 +151,7 @@ int main(int argc, char** argv)
             infile >> plaintext;
             plaintext = toLowercaseString(plaintext);
             // encrypt ciphertext with playfair cipher
-            cout << "Encrypting... " << endl;
+            cout << "Row Transposition Encrypting... " << endl;
             string ciphertext = static_cast<RowTransposition*>(cipher)->encrypt(plaintext);
             cout << "Done" << endl;
             outfile.open(argv[5]);
@@ -171,7 +179,7 @@ int main(int argc, char** argv)
             outfile.open(argv[5]);
             // decrypt message and output it
             cout << "Decrypting..." << endl;
-            string plaintext = static_cast<RowTransposition*>(cipher)->decrypt(ciphertext);
+            string plaintext = static_cast<Railfence*>(cipher)->decrypt(ciphertext);
             outfile << plaintext;
             cout << "Done..." << endl;
             infile.close();;
@@ -182,7 +190,65 @@ int main(int argc, char** argv)
     }
     // rail fence selection
     else if(string(argv[1]) == "RFC"){
+        cipher = new Railfence();
+        // remove the white space
+        key = removeSpace(key);
+        if(!static_cast<Railfence*>(cipher)->setKey(key)){
+            cout << "key was not valid" << endl;
+        };
         
+        if(string(argv[3]) == "ENC"){
+            
+            infile.open(argv[4]); // open user input file
+            if(!infile){
+                cout << "No Input File was found" << endl;
+                return 1;
+            }
+            
+            // take in the plain text
+            string plaintext;
+            infile >> plaintext;
+            plaintext = toLowercaseString(plaintext);
+            // encrypt ciphertext with playfair cipher
+            cout << "Railfence Encrypting" << endl;
+            string ciphertext = static_cast<Railfence*>(cipher)->encrypt(plaintext);
+            cout << "Done..." << endl;
+            outfile.open(argv[5]);
+            outfile << ciphertext;
+            
+            // close files
+            outfile.close();
+            infile.close();
+            
+        }
+        
+        else if(string(argv[3]) == "DEC") {
+            
+            // open file
+            infile.open(argv[4]);
+            
+            
+            if(!infile){
+                cout << "Input file was not found" << endl;
+                return 1;
+            }
+            
+            // input cipher text
+            string ciphertext;
+            infile >> ciphertext;
+            // ciphertext
+            ciphertext = toLowercaseString(ciphertext);
+            outfile.open(argv[5]);
+            // decrypt message and output it
+            cout << "Decrypting..." << endl;
+            string plaintext = static_cast<Railfence*>(cipher)->decrypt(ciphertext);
+            cout << "Done" << endl;
+            outfile << plaintext;
+          
+            infile.close();
+            outfile.close();
+        }
+
     }
     // Vigenere selection
     else if(string(argv[1]) == "RTS"){
@@ -213,7 +279,7 @@ int main(int argc, char** argv)
             infile >> plaintext;
             plaintext = toLowercaseString(plaintext);
             // encrypt ciphertext with playfair cipher
-            cout << "Encrypting... " << endl;
+            cout << "Ceasar Encrypting... " << endl;
             string ciphertext = static_cast<Ceasar*>(cipher)->encrypt(plaintext);
             cout << "Done" << endl;
             outfile.open(argv[5]);
@@ -242,29 +308,17 @@ int main(int argc, char** argv)
             // decrypt message and output it
             cout << "Decrypting..." << endl;
             string plaintext = static_cast<Ceasar*>(cipher)->decrypt(ciphertext);
-            outfile << plaintext;
             cout << "Done..." << endl;
+            outfile << plaintext;
             infile.close();;
             outfile.close();
         }
     }
     else {
-        
+        cout << "Invalid Cipher name" << endl;
+        return 1;
     }
     
-	/* Set the encryption key
-	 * A valid key comprises 16 hexidecimal
-	 * characters. Below is one example.
-	 * Your program should take input from
-	 * command line.
-	 */
-	//cipher->setKey((unsigned char*)"0123456789abcdef");
-	
-	/* Perform encryption */
-	//string cipherText = cipher->encrypt("hello world");
-	
-	/* Perform decryption */
-	//cipher->decrypt(cipherText);	
 	
 	return 0;
 }
