@@ -250,9 +250,64 @@ int main(int argc, char** argv)
         }
 
     }
+    
     // Vigenere selection
-    else if(string(argv[1]) == "RTS"){
+    else if(string(argv[1]) == "VIG"){
+        cipher = new Vigenere();
+        // check if key is valid
+        if(!static_cast<Vigenere*>(cipher)->setKey(key)){
+            cout << "Key was not valid" << endl;
+            
+            return 1;
+        };
         
+        // encryption choice
+        if(string(argv[3]) == "ENC"){
+            infile.open(argv[4]);
+            if(!infile){
+                cout << "No Input File was found" << endl;
+                return 1;
+            }
+            
+            // take in the plain text
+            string plaintext;
+            infile >> plaintext;
+            plaintext = toLowercaseString(plaintext);
+            // encrypt ciphertext with playfair cipher
+            cout << "Viginere Encrypting... " << endl;
+            string ciphertext = static_cast<Vigenere*>(cipher)->encrypt(plaintext);
+            cout << "Done" << endl;
+            outfile.open(argv[5]);
+            outfile << ciphertext;
+            
+            // close files
+            outfile.close();
+            infile.close();
+            
+        }
+        
+        else if(string(argv[3]) == "DEC") {
+            
+            infile.open(argv[4]);
+            
+            if(!infile){
+                cout << "Input file was not found" << endl;
+                return 1;
+            }
+            
+            string ciphertext;
+            infile >> ciphertext;
+            ciphertext = toLowercaseString(ciphertext);
+            
+            outfile.open(argv[5]);
+            // decrypt message and output it
+            cout << "Decrypting..." << endl;
+            string plaintext = static_cast<Vigenere*>(cipher)->decrypt(ciphertext);
+            cout << "Done..." << endl;
+            outfile << plaintext;
+            infile.close();;
+            outfile.close();
+        }
     }
     // ceasar selection
     else if(string(argv[1]) == "CES"){
