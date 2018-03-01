@@ -29,17 +29,17 @@ bool PlayFair::setKey(string pkey){
 
 // initalize the playfair matrix based on key
 void PlayFair::initMatrix(){
-    
+
     bool found = false;
-    
+
     // loop through the plain text and insert into set
     for(int i = 0; i < key.length(); i++) {
-        
+
         found = false; // set default found case to false;
-        
+
         // loop throught the set to see if the alphabetical character is in the set already
         for(int j = 0; j < setsize; j++) {
-            
+
             // since j and i are the same set found as true if it is found in the set
             if(key[i] == 'j' || key[i] == 'i'){
                 if(playfairset[j] == 'i' || playfairset[j] == 'j'){
@@ -50,46 +50,46 @@ void PlayFair::initMatrix(){
             else if (playfairset[j] == key[i]) {
                 found = true;
             }
-            
+
         }
-        
+
         // if alphabetical is not found add the plain text alpha to set
         if(!found){
             playfairset[setcount] = key[i];
             setcount++; // increment set count
         }
     }
-    
+
     // fill in the rest of the alphabetical characters for matrix
     char alpha = 'a';
     while(setcount != setsize){
         found = false;
         // loop throught the set to check if that alpha is being used already
         for(int i = 0; i < setcount; i++) {
-            
+
             // since i and j are the same if either are found set it as true
             if(alpha == 'i' || alpha == 'j'){
                 if(playfairset[i] == 'i' || playfairset[i] == 'j'){
                     found = true;
                 }
             }
-            
+
             //  if plain character is found in the set. set found as true
             if(playfairset[i] == alpha){
                 found = true;
             }
         }
-        
+
         // if alphabetical is not found add the plain text alpha to set
         if(!found){
             playfairset[setcount] = alpha;
             setcount++; // increment set account
         }
-        
+
         alpha++; // increment the alpha after we check the whole matrix for it
     }
-    
-    
+
+
     // INITIALIZE THE PLAYFAIR MATRIX AFTER THE SET IS ready
     int setindex = 0; // start the set index at 0
     for(int i = 0; i < 5; i++) {
@@ -113,10 +113,10 @@ void PlayFair::initMatrix(){
 // output: returns new string
 string PlayFair:: preparePlainText(const string &plaintext){
     string newplain;
-    
+
     // Preparing the plain text for playfair cipher
     for(int i = 0; i < plaintext.length(); i += 2){
-        
+
         // add x inbetween same letter characters
         if(plaintext[i] == plaintext[i+1]){
             newplain += plaintext[i];
@@ -133,12 +133,12 @@ string PlayFair:: preparePlainText(const string &plaintext){
             }
         }
     }
-    
+
     // if its uneven add a character
     if(newplain.length() % 2 != 0) {
         newplain += 'x';
     }
-    
+
     return newplain;
 }
 
@@ -146,9 +146,9 @@ string PlayFair:: preparePlainText(const string &plaintext){
 // Takes in two characters finds location in the matrix and returns ciphertext
 // output: ciphertext based on the two characters
 string PlayFair:: encryptHelper(char firstletter, char secondletter){
-    
+
     string ciphertext;
-    
+
     // Finds the location of the two letters
     for(int i = 0; i < 5; i++){
         for(int j = 0; j < 5; j++){
@@ -161,37 +161,38 @@ string PlayFair:: encryptHelper(char firstletter, char secondletter){
             }
         }
     }
-    
+
     // ENCRYPT THE PLAIN TEXT TO CIPHER TEXT
-    
+
     // checks if each are in the same column moves down row
     if(one.col == two.col){
-        ciphertext += playfairMatrix[one.row+1%5][one.col];
-        ciphertext += playfairMatrix[two.row+1%5][two.col];
+        ciphertext += playfairMatrix[(one.row+1)%5][one.col];
+        ciphertext += playfairMatrix[(two.row+1)%5][two.col];
     }
     // checks if in same row moves right one column
     else if(one.row == two.row){
-        ciphertext += playfairMatrix[one.row][one.col+1%5];
-        ciphertext += playfairMatrix[two.row][two.col+1%5];
+
+        ciphertext += playfairMatrix[one.row][(one.col+1)%5];
+        ciphertext += playfairMatrix[two.row][(two.col+1)%5];
     }
     // if not in row or col will swap the two columns but not the rows
     else {
         ciphertext += playfairMatrix[one.row][two.col];
         ciphertext += playfairMatrix[two.row][one.col];
     }
-    
+
     return ciphertext;
 }
 
 // decrypts the two inputted character and returns plain text
 string PlayFair::decryptHelper(char firstletter, char secondletter){
-    
+
     string plain;
-    
+
     // Finds the location of the two letters
     for(int i = 0; i < 5; i++){
         for(int j = 0; j < 5; j++){
-            
+
             // check if the first or second letter is i or j and find location
             if(firstletter == 'j' || firstletter == 'i'){
                 if(playfairMatrix[i][j] == 'i' || playfairMatrix[i][j] == 'j'){
@@ -216,26 +217,58 @@ string PlayFair::decryptHelper(char firstletter, char secondletter){
                 }
             }
         }
-    
+
     // Decrypt THE Cipher TEXT TO plain TEXT
 
     // checks if each are in the same column moves up a row
     if(one.col == two.col){
-        plain += playfairMatrix[one.row-1%5][one.col];
-        plain += playfairMatrix[two.row-1%5][two.col];
-        
+
+      // checks if both locations' row is found at the beginning of setindex
+      // If either of them are then we place them at the end of the row
+      if(one.row != 0  && two.row != 0){
+
+        plain += playfairMatrix[(one.row-1)%5][one.col];
+        plain += playfairMatrix[(two.row-1)%5][two.col];
+      }
+      else if(one.row == 0){
+        plain += playfairMatrix[4][one.col];
+        plain += playfairMatrix[(two.row-1)%5][two.col];
+
+      }
+      else if(two.row == 0){
+        plain += playfairMatrix[(one.row-1)%5][one.col];
+        plain += playfairMatrix[4][two.col];
+      }
+
+
     }
     // checks if in same row moves right one column
     else if(one.row == two.row){
-        plain += playfairMatrix[one.row][one.col-1%5];
-        plain += playfairMatrix[two.row][two.col-1%5];
+
+      // checks if both locations' col is found at the beginning of setindex
+      // If either of them are then we place them at the end of the col
+      if(one.col != 0  && two.col != 0){
+
+        plain += playfairMatrix[one.row][(one.col-1)%5];
+        plain += playfairMatrix[two.row][(two.col-1)%5];
+      }
+      else if(one.col == 0){
+        plain += playfairMatrix[one.row][4];
+        plain += playfairMatrix[two.row][(two.col-1)%5];
+      }
+      else if(two.col == 0){
+        plain += playfairMatrix[one.row][(one.col-1)%5];
+        plain += playfairMatrix[two.row][4];
+      }
+
+
     }
     // if not in row or col will swap the two columns but not the rows
     else {
         plain += playfairMatrix[one.row][two.col];
         plain += playfairMatrix[two.row][one.col];
     }
-    
+
     return plain;
 }
 
@@ -244,7 +277,7 @@ string PlayFair::decryptHelper(char firstletter, char secondletter){
 // Decrypts the cipher using the playfair cipher
 // returns plain text
 string PlayFair::decrypt(const string &ciphertext){
-    
+
     string plain;
     for(int i = 0; i < ciphertext.length(); i+=2){
         plain += decryptHelper(ciphertext[i], ciphertext[i+1]);
@@ -256,7 +289,7 @@ string PlayFair::decrypt(const string &ciphertext){
 // Encrypts using the playfair cipher
 // returns ciphertext
 string PlayFair::encrypt(const string &plaintext){
-    
+
     string ciphertext;
     string plain = preparePlainText(plaintext);
     for(int i = 0; i < plain.length(); i+=2){
@@ -264,8 +297,3 @@ string PlayFair::encrypt(const string &plaintext){
     }
     return ciphertext;
 }
-
-
-
-
-

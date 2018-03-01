@@ -14,3 +14,6 @@ Vigenere.o : Vigenere.cpp Vigenere.h
 	g++ -c Vigenere.cpp
 clean:
 	rm *.o cipher
+cleantxt:
+	rm *.txt cipher
+
