@@ -13,6 +13,7 @@
 #include "RowTransposition.h"
 #include "Railfence.h"
 #include "Vigenere.h"
+#include "Hill.h"
 using namespace std;
 
 
@@ -369,12 +370,69 @@ int main(int argc, char** argv)
             outfile.close();
         }
     }
+    else if(string(argv[1]) == "HIL"){
+      cipher = new Hill();
+
+      if(!static_cast<Hill*>(cipher)->setKey(key)){
+          cout << "Key was not valid(Key of size 4 only)" << endl;
+          return 1;
+      };
+
+      if(string(argv[3]) == "ENC"){
+          infile.open(argv[4]);
+          if(!infile){
+              cout << "No Input File was found" << endl;
+              return 1;
+          }
+
+          // take in the plain text
+          string plaintext;
+          infile >> plaintext;
+          plaintext = toLowercaseString(plaintext);
+          // encrypt ciphertext with playfair cipher
+          cout << "Hill Encrypting... " << endl;
+          string ciphertext = static_cast<Hill*>(cipher)->encrypt(plaintext);
+          cout << "Done" << endl;
+          outfile.open(argv[5]);
+          outfile << ciphertext;
+
+          // close files
+          outfile.close();
+          infile.close();
+
+      }
+
+      else if(string(argv[3]) == "DEC") {
+
+          infile.open(argv[4]);
+
+          if(!infile){
+              cout << "Input file was not found" << endl;
+              return 1;
+          }
+
+          string ciphertext;
+          infile >> ciphertext;
+          ciphertext = toLowercaseString(ciphertext);
+
+          outfile.open(argv[5]);
+          // decrypt message and output it
+          cout << "Decrypting..." << endl;
+          string plaintext = static_cast<Hill*>(cipher)->decrypt(ciphertext);
+          cout << "Done..." << endl;
+          outfile << plaintext;
+          infile.close();;
+          outfile.close();
+      }
+
+    }
     else {
         cout << "Invalid Cipher name: " << endl;
         cout << "PLF: PlayFair" << endl;
         cout << "RTS: Row Transposition" << endl;
         cout << "VIG: Vigenere" << endl;
         cout << "CES: Caesar" << endl;
+        cout << "HIL: Hill" << endl;
         return 1;
     }
 
